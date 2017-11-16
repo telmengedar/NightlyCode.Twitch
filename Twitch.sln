@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch", "Twitch\Twitch.csproj", "{9F9C48B2-493B-47E6-9B94-336C53F8F400}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{D2657119-FC1F-4DFC-94A4-62A3F97DEFAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9F9C48B2-493B-47E6-9B94-336C53F8F400}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F9C48B2-493B-47E6-9B94-336C53F8F400}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F9C48B2-493B-47E6-9B94-336C53F8F400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2657119-FC1F-4DFC-94A4-62A3F97DEFAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2657119-FC1F-4DFC-94A4-62A3F97DEFAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2657119-FC1F-4DFC-94A4-62A3F97DEFAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2657119-FC1F-4DFC-94A4-62A3F97DEFAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

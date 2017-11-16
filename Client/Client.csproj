@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9F9C48B2-493B-47E6-9B94-336C53F8F400}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{D2657119-FC1F-4DFC-94A4-62A3F97DEFAA}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NightlyCode.Twitch</RootNamespace>
-    <AssemblyName>NightlyCode.Twitch</AssemblyName>
+    <RootNamespace>NightlyCode.Twitch.Client</RootNamespace>
+    <AssemblyName>TwitchClient</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,13 +35,6 @@
   <ItemGroup>
     <Reference Include="NightlyCode.Core">
       <HintPath>..\..\..\Compiled\Library\NightlyCode.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NightlyCode.IRC">
-      <HintPath>..\..\..\Compiled\Library\NightlyCode.IRC.dll</HintPath>
-    </Reference>
-    <Reference Include="NightlyCode.Japi">
-      <HintPath>..\..\..\Compiled\Library\NightlyCode.Japi.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,38 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\Follow.cs" />
-    <Compile Include="Api\GetFollowerResponse.cs" />
-    <Compile Include="Api\GetUserResponse.cs" />
-    <Compile Include="Api\Pagination.cs" />
-    <Compile Include="Api\Response.cs" />
-    <Compile Include="Api\User.cs" />
-    <Compile Include="V5\Channel.cs" />
-    <Compile Include="V5\Channels.cs" />
-    <Compile Include="Api\TwitchApi.cs" />
-    <Compile Include="Chat\Badge.cs" />
-    <Compile Include="Chat\ChatChannel.cs" />
-    <Compile Include="Chat\ChatClient.cs" />
-    <Compile Include="Chat\ChatMessage.cs" />
-    <Compile Include="Chat\ChatParser.cs" />
-    <Compile Include="Chat\Emote.cs" />
-    <Compile Include="Chat\HostInformation.cs" />
-    <Compile Include="Chat\MessageExtensions.cs" />
-    <Compile Include="Chat\Notice.cs" />
-    <Compile Include="Chat\Subscription.cs" />
-    <Compile Include="Chat\SubscriptionType.cs" />
-    <Compile Include="Chat\UserState.cs" />
-    <Compile Include="Chat\UserType.cs" />
-    <Compile Include="Chat\WaitState.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="V5\Follow.cs" />
-    <Compile Include="V5\FollowResponse.cs" />
-    <Compile Include="V5\Parameter.cs" />
-    <Compile Include="V5\SubscriberResponse.cs" />
-    <Compile Include="V5\Subscription.cs" />
-    <Compile Include="V5\User.cs" />
-    <Compile Include="V5\V5Api.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Twitch\Twitch.csproj">
+      <Project>{9f9c48b2-493b-47e6-9b94-336c53f8f400}</Project>
+      <Name>Twitch</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -91,8 +66,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Target Name="AfterBuild">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DevDir)\Compiled\Library\" />
-    <Copy SourceFiles="$(DocumentationFile)" DestinationFolder="$(DevDir)\Compiled\Library\" />
-  </Target>
 </Project>
