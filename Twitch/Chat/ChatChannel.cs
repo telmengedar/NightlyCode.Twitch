@@ -151,7 +151,7 @@ namespace NightlyCode.Twitch.Chat {
                         userstate.UserType = ChatParser.ParseUserType(attribute.Value);
                         break;
                     default:
-                        Core.Logs.Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in subscription message");
+                        Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in subscription message");
                         break;
                 }
             }
@@ -244,7 +244,7 @@ namespace NightlyCode.Twitch.Chat {
                         subscription.UserType = (UserType)Enum.Parse(typeof(UserType), attribute.Value.Replace("_", ""), true);
                         break;
                     default:
-                        Core.Logs.Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in subscription message");
+                        Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in subscription message");
                         break;
                 }
             }
@@ -352,7 +352,7 @@ namespace NightlyCode.Twitch.Chat {
                         // not too interested in the timestamps for now
                         break;
                     default:
-                        Core.Logs.Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in chat message");
+                        Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in chat message");
                         break;
                 }
             }
