@@ -13,18 +13,23 @@ namespace NightlyCode.Twitch {
 
         static Logger()
         {
-            if (Assembly.GetEntryAssembly()?.GetReferencedAssemblies()?.Any(a => a.Name == "NightlyCode.Core") ?? false) {
-                Type loggertype = Type.GetType("Core.Logs.Logger");
+            if (Assembly.GetEntryAssembly()?.GetReferencedAssemblies().Any(a => a.Name == "NightlyCode.Core") ?? false) {
+                Type loggertype = Type.GetType("NightlyCode.Core.Logs.Logger");
+                if(loggertype == null)
+                    loggertype = Assembly.Load(Assembly.GetEntryAssembly()?.GetReferencedAssemblies().First(a => a.Name == "NightlyCode.Core"))?.GetType("NightlyCode.Core.Logs.Logger");
+
                 if(loggertype != null) {
-                    MethodInfo infomethod = loggertype.GetMethod("Info", BindingFlags.Static | BindingFlags.Public);
-                    if(infomethod!=null)
+                    MethodInfo infomethod = loggertype.GetMethod("Info", new[] {typeof(object), typeof(string), typeof(string)});
+                    if(infomethod != null)
                         info = (sender, message, details) => infomethod.Invoke(null, new[] {sender, message, details});
-                    MethodInfo warningmethod = loggertype.GetMethod("Warning", BindingFlags.Static | BindingFlags.Public);
-                    if (warningmethod != null)
-                        warning = (sender, message, details) => warningmethod.Invoke(null, new[] { sender, message, details });
-                    MethodInfo errormethod = loggertype.GetMethod("Error", BindingFlags.Static | BindingFlags.Public);
-                    if (errormethod != null)
-                        error = (sender, message, details) => errormethod.Invoke(null, new[] { sender, message, details });
+
+                    MethodInfo warningmethod = loggertype.GetMethod("Warning", new[] {typeof(object), typeof(string), typeof(string)});
+                    if(warningmethod != null)
+                        warning = (sender, message, details) => warningmethod.Invoke(null, new[] {sender, message, details});
+
+                    MethodInfo errormethod = loggertype.GetMethod("Error", new[] {typeof(object), typeof(string), typeof(Exception)});
+                    if(errormethod != null)
+                        error = (sender, message, details) => errormethod.Invoke(null, new[] {sender, message, details});
                 }
             }
         }
