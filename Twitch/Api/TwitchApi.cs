@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Eventing.Reader;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using NightlyCode.Japi.Json;
 using NightlyCode.Twitch.V5;
 
