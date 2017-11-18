@@ -176,6 +176,7 @@ namespace NightlyCode.Twitch.Chat {
         }
 
         void ReceiveHostTarget(IrcMessage message) {
+            Logger.Info(this, "New Host Target", message.ToString());
             if(message.Arguments.Length > 2)
                 Host?.Invoke(new HostInformation(message.Arguments[0].Substring(1), message.Arguments[1], int.Parse(message.Arguments[2])));
             else Host?.Invoke(new HostInformation(message.Arguments[0].Substring(1), message.Arguments[1], -1));
@@ -306,54 +307,56 @@ namespace NightlyCode.Twitch.Chat {
                 Message = message.Arguments[1]
             };
 
-            foreach(IrcTag attribute in message.Tags) {
-                if(string.IsNullOrEmpty(attribute.Value))
-                    continue;
+            if(message.Tags != null) {
+                foreach(IrcTag attribute in message.Tags) {
+                    if(string.IsNullOrEmpty(attribute.Value))
+                        continue;
 
-                switch(attribute.Key) {
-                    case "badges":
-                        chatmessage.Badges = ExtractBadges(attribute.Value).ToArray();
-                        break;
-                    case "bits":
-                        chatmessage.Bits = int.Parse(attribute.Value);
-                        break;
-                    case "color":
-                        chatmessage.Color = attribute.Value;
-                        break;
-                    case "display-name":
-                        chatmessage.DisplayName = attribute.Value;
-                        break;
-                    case "emotes":
-                        chatmessage.Emotes = ExtractEmotes(attribute.Value).OrderBy(e => e.FirstIndex).ToArray();
-                        break;
-                    case "id":
-                        chatmessage.ID = attribute.Value;
-                        break;
-                    case "mod":
-                        chatmessage.IsMod = attribute.Value == "1";
-                        break;
-                    case "room-id":
-                        chatmessage.RoomID = attribute.Value;
-                        break;
-                    case "subscriber":
-                        chatmessage.IsSubscriber = attribute.Value == "1";
-                        break;
-                    case "turbo":
-                        chatmessage.IsTurbo = attribute.Value == "1";
-                        break;
-                    case "user-id":
-                        chatmessage.UserID = attribute.Value;
-                        break;
-                    case "user-type":
-                        chatmessage.UserType = (UserType)Enum.Parse(typeof(UserType), attribute.Value.Replace("_", ""), true);
-                        break;
-                    case "sent-ts":
-                    case "tmi-sent-ts":
-                        // not too interested in the timestamps for now
-                        break;
-                    default:
-                        Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in chat message");
-                        break;
+                    switch(attribute.Key) {
+                        case "badges":
+                            chatmessage.Badges = ExtractBadges(attribute.Value).ToArray();
+                            break;
+                        case "bits":
+                            chatmessage.Bits = int.Parse(attribute.Value);
+                            break;
+                        case "color":
+                            chatmessage.Color = attribute.Value;
+                            break;
+                        case "display-name":
+                            chatmessage.DisplayName = attribute.Value;
+                            break;
+                        case "emotes":
+                            chatmessage.Emotes = ExtractEmotes(attribute.Value).OrderBy(e => e.FirstIndex).ToArray();
+                            break;
+                        case "id":
+                            chatmessage.ID = attribute.Value;
+                            break;
+                        case "mod":
+                            chatmessage.IsMod = attribute.Value == "1";
+                            break;
+                        case "room-id":
+                            chatmessage.RoomID = attribute.Value;
+                            break;
+                        case "subscriber":
+                            chatmessage.IsSubscriber = attribute.Value == "1";
+                            break;
+                        case "turbo":
+                            chatmessage.IsTurbo = attribute.Value == "1";
+                            break;
+                        case "user-id":
+                            chatmessage.UserID = attribute.Value;
+                            break;
+                        case "user-type":
+                            chatmessage.UserType = (UserType)Enum.Parse(typeof(UserType), attribute.Value.Replace("_", ""), true);
+                            break;
+                        case "sent-ts":
+                        case "tmi-sent-ts":
+                            // not too interested in the timestamps for now
+                            break;
+                        default:
+                            Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in chat message");
+                            break;
+                    }
                 }
             }
             MessageReceived?.Invoke(chatmessage);
