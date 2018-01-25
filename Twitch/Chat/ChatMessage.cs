@@ -79,5 +79,9 @@
         /// bits sent with message
         /// </summary>
         public int Bits { get; set; }
+
+        public override string ToString() {
+            return $"[{User}] {Message}";
+        }
     }
 }
