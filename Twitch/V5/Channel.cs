@@ -4,6 +4,7 @@ using NightlyCode.Japi.Json;
 namespace NightlyCode.Twitch.V5 {
     public class Channel {
         public bool Mature { get; set; }
+
         public string Status { get; set; }
 
         [JsonKey("broadcaster_language")]
@@ -12,6 +13,9 @@ namespace NightlyCode.Twitch.V5 {
         [JsonKey("display_name")]
         public string DisplayName { get; set; }
 
+        /// <summary>
+        /// name of game currently played
+        /// </summary>
         public string Game { get; set; }
 
         public string Language { get; set; }

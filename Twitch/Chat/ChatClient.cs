@@ -26,6 +26,8 @@ namespace NightlyCode.Twitch.Chat {
 
         readonly ManualResetEvent connectionwait = new ManualResetEvent(false);
 
+        string user;
+
         /// <summary>
         /// creates a new <see cref="ChatClient"/>
         /// </summary>
@@ -40,8 +42,8 @@ namespace NightlyCode.Twitch.Chat {
 
         void OnDisconnected() {
             lock(channellock) {
-                foreach(ChatChannel channel in channels.Values)
-                    channel.Part();
+                //foreach(ChatChannel channel in channels.Values)
+                //    channel.Part();
                 channels.Clear();
             }
             Disconnected?.Invoke();
@@ -83,7 +85,7 @@ namespace NightlyCode.Twitch.Chat {
                 case "JOIN":
                     channelname = GetChannelName(message.Arguments[0]);
 
-                    if (message.ExtractUser() == channelname)
+                    if (message.ExtractUser().ToLower() == user.ToLower())
                         JoinChannel(channelname);
                     SendChannelMessage(channelname, message);
                     break;
@@ -178,6 +180,8 @@ namespace NightlyCode.Twitch.Chat {
         /// connects to the twitch irc server (doesn't join a channel)
         /// </summary>
         public void Connect(string user, string oauth) {
+            this.user = user;
+
             ircclient.Connect("irc.twitch.tv");
             ircclient.SendMessage(new IrcMessage("PASS", $"oauth:{oauth}"));
             ircclient.SendMessage(new IrcMessage("NICK", user));

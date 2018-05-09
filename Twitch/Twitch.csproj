@@ -73,7 +73,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="V5\Follow.cs" />
     <Compile Include="V5\FollowResponse.cs" />
+    <Compile Include="V5\GetStreamResponse.cs" />
     <Compile Include="V5\Parameter.cs" />
+    <Compile Include="V5\Stream.cs" />
+    <Compile Include="V5\StreamPreview.cs" />
+    <Compile Include="V5\Streams.cs" />
+    <Compile Include="V5\StreamType.cs" />
     <Compile Include="V5\SubscriberResponse.cs" />
     <Compile Include="V5\Subscription.cs" />
     <Compile Include="V5\User.cs" />
