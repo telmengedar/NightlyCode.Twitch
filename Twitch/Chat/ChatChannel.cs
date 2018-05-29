@@ -244,6 +244,9 @@ namespace NightlyCode.Twitch.Chat {
                     case "user-type":
                         subscription.UserType = (UserType)Enum.Parse(typeof(UserType), attribute.Value.Replace("_", ""), true);
                         break;
+                    case "emote-only":
+                        // this basically just tells us that the user has sent a message containing only emotes ... whatever ...
+                        break;
                     default:
                         Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in subscription message");
                         break;

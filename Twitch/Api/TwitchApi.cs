@@ -1,11 +1,12 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using NightlyCode.Japi.Json;
 using NightlyCode.Twitch.V5;
 
 namespace NightlyCode.Twitch.Api {
 
     /// <summary>
-    /// 
+    /// access to the twitch helix api as documented in <see cref="https://dev.twitch.tv/docs/api/reference"/>
     /// </summary>
     public class TwitchApi {
         readonly string clientid;
@@ -33,6 +34,15 @@ namespace NightlyCode.Twitch.Api {
                 string response = wc.DownloadString(url);
                 return JSON.Read<T>(response);
             }
+        }
+
+        /// <summary>
+        /// Gets information about active streams. Streams are returned sorted by number of current viewers, in descending order. Across multiple pages of results, there may be duplicate or missing streams, as viewers join and leave streams.
+        /// </summary>
+        /// <param name="userids">Returns streams broadcast by one or more specified user IDs. You can specify up to 100 IDs</param>
+        /// <returns>streams matching the request</returns>
+        public GetStreamsResponse GetStreams(params string[] userids) {
+            return Request<GetStreamsResponse>("https://api.twitch.tv/helix/streams", new Parameter("user_id", string.Join(",", userids)));
         }
 
         public GetUserResponse GetUsersByID(params string[] ids) {

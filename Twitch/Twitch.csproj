@@ -48,9 +48,11 @@
   <ItemGroup>
     <Compile Include="Api\Follow.cs" />
     <Compile Include="Api\GetFollowerResponse.cs" />
+    <Compile Include="Api\GetStreamsResponse.cs" />
     <Compile Include="Api\GetUserResponse.cs" />
     <Compile Include="Api\Pagination.cs" />
     <Compile Include="Api\Response.cs" />
+    <Compile Include="Api\TwitchStream.cs" />
     <Compile Include="Api\User.cs" />
     <Compile Include="V5\Channel.cs" />
     <Compile Include="V5\Channels.cs" />
