@@ -151,7 +151,7 @@ namespace NightlyCode.Twitch.Chat {
                         userstate.UserType = ChatParser.ParseUserType(attribute.Value);
                         break;
                     default:
-                        Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in subscription message");
+                        Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in user state message");
                         break;
                 }
             }
@@ -248,7 +248,7 @@ namespace NightlyCode.Twitch.Chat {
                         // this basically just tells us that the user has sent a message containing only emotes ... whatever ...
                         break;
                     default:
-                        Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in subscription message");
+                        Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in user notice message");
                         break;
                 }
             }
@@ -278,6 +278,14 @@ namespace NightlyCode.Twitch.Chat {
                         break;
                     case "subs-only":
                         SubscribersOnly = attribute.Value == "1";
+                        break;
+                    case "emote-only":
+                    case "followers-only":
+                    case "rituals":
+                    case "room-id":
+                        break;
+                    default:
+                        Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in room state message");
                         break;
                 }
             }
@@ -355,6 +363,9 @@ namespace NightlyCode.Twitch.Chat {
                         case "sent-ts":
                         case "tmi-sent-ts":
                             // not too interested in the timestamps for now
+                            break;
+                        case "emote-only":
+                            // this basically just tells us that the user has sent a message containing only emotes ... whatever ...
                             break;
                         default:
                             Logger.Info(this, $"Unknown tag '{attribute.Key}' with value '{attribute.Value}' in chat message");

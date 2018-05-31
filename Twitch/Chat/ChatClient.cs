@@ -40,6 +40,8 @@ namespace NightlyCode.Twitch.Chat {
 
         public event Action<ChatChannel> ChannelLeft;
 
+        public event Action<string> CapAcknowledged;
+
         void OnDisconnected() {
             lock(channellock) {
                 //foreach(ChatChannel channel in channels.Values)
@@ -79,6 +81,13 @@ namespace NightlyCode.Twitch.Chat {
             string channelname;
             switch (message.Command)
             {
+                case "CAP":
+                    if(message.Arguments.Length < 3)
+                        break;
+
+                    if(message.Arguments[1] == "ACK")
+                        CapAcknowledged?.Invoke(message.Arguments[2]);
+                    break;
                 case "PING":
                     SendMessage(new IrcMessage("PONG", message.Arguments));
                     break;
@@ -135,6 +144,9 @@ namespace NightlyCode.Twitch.Chat {
                 case "HOSTTARGET":
                     if (!message.Arguments[1].StartsWith("-"))
                         SendChannelMessage(message.Arguments[1], message);
+                    break;
+                case "MODE":
+                    // channel or user mode ... not that important for now
                     break;
                 default:
                     Logger.Warning(this, "Unprocessed message", message.ToString());
