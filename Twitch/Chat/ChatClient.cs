@@ -102,7 +102,7 @@ namespace NightlyCode.Twitch.Chat {
                     channelname = GetChannelName(message.Arguments[0]);
                     SendChannelMessage(channelname, message);
 
-                    if (message.ExtractUser() == channelname)
+                    if (message.ExtractUser().ToLower() == user.ToLower())
                     {
                         ChatChannel channel;
                         lock (channellock)
