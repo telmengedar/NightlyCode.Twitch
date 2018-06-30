@@ -36,11 +36,25 @@ namespace NightlyCode.Twitch.Chat {
             ircclient.Disconnected += OnDisconnected;
         }
 
+        /// <summary>
+        /// triggered when a channel was joined
+        /// </summary>
         public event Action<ChatChannel> ChannelJoined;
 
+        /// <summary>
+        /// triggered when a channel was left
+        /// </summary>
         public event Action<ChatChannel> ChannelLeft;
 
+        /// <summary>
+        /// triggered when the twitch server acknowledge the request of a cap
+        /// </summary>
         public event Action<string> CapAcknowledged;
+
+        /// <summary>
+        /// triggered when the twitch servers request a reconnect
+        /// </summary>
+        public event Action Reconnect;
 
         void OnDisconnected() {
             lock(channellock) {
@@ -113,6 +127,9 @@ namespace NightlyCode.Twitch.Chat {
                         if (channel != null)
                             ChannelLeft?.Invoke(channel);
                     }
+                    break;
+                case "RECONNECT":
+                    Reconnect?.Invoke();
                     break;
                 case "001":
                 case "002":
