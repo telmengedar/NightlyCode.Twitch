@@ -54,6 +54,7 @@
     <Compile Include="Api\Response.cs" />
     <Compile Include="Api\TwitchStream.cs" />
     <Compile Include="Api\User.cs" />
+    <Compile Include="Chat\RaidNotice.cs" />
     <Compile Include="V5\Channel.cs" />
     <Compile Include="V5\Channels.cs" />
     <Compile Include="Api\TwitchApi.cs" />

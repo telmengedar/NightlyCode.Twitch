@@ -60,6 +60,11 @@ namespace NightlyCode.Twitch.Chat {
         public event Action<HostInformation> Host;
 
         /// <summary>
+        /// triggered when some channel is raiding this channel
+        /// </summary>
+        public event Action<RaidNotice> Raid;
+
+        /// <summary>
         /// triggered when a notice from server was received
         /// </summary>
         public event Action<Notice> Notice;
@@ -99,7 +104,19 @@ namespace NightlyCode.Twitch.Chat {
                     ReceiveRoomState(message);
                     break;
                 case "USERNOTICE":
-                    ReceiveUserNotice(message);
+                    switch(message.Tags.FirstOrDefault(t => t.Key == "msg-id")?.Value) {
+                        case "raid":
+                            ReceiveRaidNotice(message);
+                            break;
+                        case "sub":
+                        case "resub":
+                        case "charity":
+                            ReceiveUserNotice(message);
+                            break;
+                        default:
+                            Logger.Warning(this, "Unknown user message type", message.ToString());
+                            break;
+                    }
                     break;
                 case "JOIN":
                     ReceiveJoin(message);
@@ -201,6 +218,7 @@ namespace NightlyCode.Twitch.Chat {
                     case "color":
                         subscription.Color = attribute.Value;
                         break;
+                    case "id=raid;msg-param-displayName":
                     case "display-name":
                         subscription.DisplayName = attribute.Value;
                         break;
@@ -236,6 +254,7 @@ namespace NightlyCode.Twitch.Chat {
                         break;
                     case "user":
                     case "login":
+                    case "msg-param-login":
                         subscription.User = attribute.Value;
                         break;
                     case "user-id":
@@ -254,6 +273,44 @@ namespace NightlyCode.Twitch.Chat {
             }
 
             Subscription?.Invoke(subscription);
+        }
+
+        void ReceiveRaidNotice(IrcMessage message)
+        {
+            RaidNotice raid=new RaidNotice();
+
+            foreach(IrcTag attribute in message.Tags) {
+                if(string.IsNullOrEmpty(attribute.Value))
+                    continue;
+
+                switch(attribute.Key) {
+                    case "color":
+                        raid.Color = attribute.Value;
+                        break;
+                    case "msg-param-displayName":
+                    case "display-name":
+                        raid.DisplayName = attribute.Value;
+                        break;
+                    case "msg-param-login":
+                    case "login":
+                        raid.Login = attribute.Value;
+                        break;
+                    case "msg-param-profileImageURL":
+                        raid.Avatar = attribute.Value;
+                        break;
+                    case "msg-param-viewerCount":
+                        raid.RaiderCount = int.Parse(attribute.Value);
+                        break;
+                    case "room-id":
+                        raid.RoomID = attribute.Value;
+                        break;
+                    case "system-msg":
+                        raid.SystemMessage = attribute.Value;
+                        break;
+                }
+            }
+
+            Raid?.Invoke(raid);
         }
 
         void ReceiveRoomState(IrcMessage message) {
