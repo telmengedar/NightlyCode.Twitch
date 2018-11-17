@@ -84,14 +84,24 @@ namespace NightlyCode.Twitch.Chat {
             }
         }
 
-        void SendChannelMessage(string channelname, IrcMessage message) {
+        bool TrySendChannelMessage(string channelname, IrcMessage message) {
             ChatChannel channel = GetChannel(GetChannelName(channelname));
-            if(channel != null)
-                channel.OnMessage(message);
-            else Logger.Warning(this, $"Message for channel '{channelname}' but channel not registered in client.", message.ToString());
+            channel?.OnMessage(message);
+            return channel != null;
+        }
+
+        void SendChannelMessage(string channelname, IrcMessage message) {
+            if(!TrySendChannelMessage(channelname, message))
+                Logger.Warning(this, $"Message for channel '{channelname}' but channel not registered in client.", message.ToString());
         }
 
         void ProcessMessage(IrcMessage message) {
+            if(message.Command == $":{message.Source}" && message.Arguments.Length > 0) {
+                // twitch seems to have issues building proper irc messages
+                ProcessMessage(new IrcMessage(message.Arguments[0], message.Arguments.Skip(1).ToArray()));
+                return;
+            }
+
             string channelname;
             switch (message.Command)
             {
@@ -128,6 +138,7 @@ namespace NightlyCode.Twitch.Chat {
                             ChannelLeft?.Invoke(channel);
                     }
                     break;
+                case "tmi.twitch.tv RECONNECT":
                 case "RECONNECT":
                     Reconnect?.Invoke();
                     break;
@@ -159,8 +170,10 @@ namespace NightlyCode.Twitch.Chat {
                     SendChannelMessage(message.Arguments[0], message);
                     break;
                 case "HOSTTARGET":
-                    if (!message.Arguments[1].StartsWith("-"))
-                        SendChannelMessage(message.Arguments[1], message);
+                    if(!message.Arguments[1].StartsWith("-")) {
+                        TrySendChannelMessage(message.Arguments[0], message);
+                        TrySendChannelMessage(message.Arguments[1].Split(' ')[0], message);
+                    }
                     break;
                 case "MODE":
                     // channel or user mode ... not that important for now

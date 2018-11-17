@@ -60,6 +60,11 @@ namespace NightlyCode.Twitch.Chat {
         public event Action<HostInformation> Host;
 
         /// <summary>
+        /// triggered when this channel is hosting some other channel
+        /// </summary>
+        public event Action<HostInformation> Hosting;
+
+        /// <summary>
         /// triggered when some channel is raiding this channel
         /// </summary>
         public event Action<RaidNotice> Raid;
@@ -193,10 +198,28 @@ namespace NightlyCode.Twitch.Chat {
         }
 
         void ReceiveHostTarget(IrcMessage message) {
-            Logger.Info(this, "New Host Target", message.ToString());
-            if(message.Arguments.Length > 2)
-                Host?.Invoke(new HostInformation(message.Arguments[0].Substring(1), message.Arguments[1], int.Parse(message.Arguments[2])));
-            else Host?.Invoke(new HostInformation(message.Arguments[0].Substring(1), message.Arguments[1], -1));
+            HostInformation hostinformation = CreateHostInformation(message);
+
+            if(hostinformation.Channel != "-") {
+                if(hostinformation.Host == name)
+                    Hosting?.Invoke(hostinformation);
+                else Host?.Invoke(hostinformation);
+            }
+        }
+
+        HostInformation CreateHostInformation(IrcMessage message) {
+            if(message.Arguments.Length == 3)
+                return new HostInformation(message.Arguments[0].Substring(1), message.Arguments[1], int.Parse(message.Arguments[2]));
+
+            if(message.Arguments[1].Contains(' ')) {
+                string[] split = message.Arguments[1].Split(' ');
+                int viewers;
+                if(!int.TryParse(split[1], out viewers))
+                    viewers = -1;
+                return new HostInformation(message.Arguments[0].Substring(1), split[0], viewers);
+            }
+
+            return new HostInformation(message.Arguments[0].Substring(1), message.Arguments[1], -1);
         }
 
         void ReceiveUserNotice(IrcMessage message) {
