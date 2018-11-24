@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>NightlyCode.Twitch</AssemblyName>
+    <RootNamespace>NightlyCode.Twitch</RootNamespace>
+    <Version>0.5.6</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Toni Gottschall</Authors>
+    <Company>NightlyCode</Company>
+  </PropertyGroup>
+
+  <Target Name="PostPackNugetDeploy" AfterTargets="Pack" Condition="'$(Configuration)' == 'Release'">
+    <Copy SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(DevDir)\NuGet\" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="NightlyCode.Irc" Version="0.7.2" />
+    <PackageReference Include="NightlyCode.Japi" Version="0.8.5" />
+  </ItemGroup>
+
+</Project>
